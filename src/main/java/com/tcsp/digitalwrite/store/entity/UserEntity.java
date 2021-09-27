@@ -31,9 +31,10 @@ public class UserEntity {
     @JoinColumn(name = "system_id")
     SystemEntity system;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable( name = "user_role", joinColumns = @JoinColumn( name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    Set<Role> roles;
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles;
 }
