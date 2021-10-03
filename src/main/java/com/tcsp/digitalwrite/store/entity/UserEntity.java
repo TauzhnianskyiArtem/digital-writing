@@ -21,6 +21,8 @@ public class UserEntity {
 
     String token;
 
+    String name;
+
     Double typingSpeed;
 
     Double accuracy;

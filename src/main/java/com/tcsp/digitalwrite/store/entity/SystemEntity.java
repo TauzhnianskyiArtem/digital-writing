@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class SystemEntity {
 
     String name;
 
-    @OneToMany(mappedBy = "system")
+    @Builder.Default
+    Instant createdAt = Instant.now();
+
+    @OneToMany(mappedBy = "system", orphanRemoval = true)
     List<UserEntity> users = new ArrayList<>();
 }

@@ -15,9 +15,9 @@ import java.time.Instant;
 @Entity
 @Table(name = "session")
 public class SessionEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
+    String id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

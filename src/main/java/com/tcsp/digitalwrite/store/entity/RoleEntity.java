@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @EqualsAndHashCode( of = {"id"})
@@ -21,6 +20,4 @@ public class RoleEntity {
 
     String name;
 
-    @ManyToMany(mappedBy = "roles")
-    List<UserEntity> users;
 }
