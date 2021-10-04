@@ -1,10 +1,9 @@
 package com.tcsp.digitalwrite.api.controller;
 
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
-import com.tcsp.digitalwrite.api.dto.AckDto;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.SystemDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
-import com.tcsp.digitalwrite.api.exception.NotFoundException;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.repository.SystemRepository;
 import lombok.AccessLevel;
@@ -50,7 +49,7 @@ public class SystemController {
     }
 
     @DeleteMapping(DELETE_SYSTEM)
-    public Map<String, String> deleteSystem(@PathVariable("token_system") String tokenSystem) {
+    public AnswerDto deleteSystem(@PathVariable("token_system") String tokenSystem) {
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(tokenSystem);
 
@@ -58,11 +57,7 @@ public class SystemController {
 
         String result = String.format("System with %s deleted successfully", tokenSystem);
 
-        Map<String, String> data = new HashMap<>();
-
-        data.put("data", result);
-
-        return data;
+        return AnswerDto.makeDefault(result);
     }
 
 }

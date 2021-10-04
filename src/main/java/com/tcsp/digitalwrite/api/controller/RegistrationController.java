@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.controller;
 
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RegistrationDto;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
@@ -61,7 +62,7 @@ public class RegistrationController {
     }
 
     @DeleteMapping(DELETE_USER)
-    public Map<String, String> deleteUser(
+    public AnswerDto deleteUser(
             @PathVariable(value = "token_user") String tokenUser
     ){
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
@@ -70,10 +71,6 @@ public class RegistrationController {
 
         String result = String.format("User with %s deleted successfully", tokenUser);
 
-        Map<String, String> data = new HashMap<>();
-
-        data.put("data", result);
-
-        return data;
+        return AnswerDto.makeDefault(result);
     }
 }

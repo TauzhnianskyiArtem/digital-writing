@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.controller;
 
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
 import com.tcsp.digitalwrite.api.dto.RegistrationDto;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
@@ -56,7 +57,7 @@ public class AuthorizationController {
     }
 
     @DeleteMapping(DELETE_SESSION)
-    public Map<String, String> deleteSession(
+    public AnswerDto deleteSession(
             @PathVariable("session_id") String sessionId
     ){
         SessionEntity session = controllerHelper.getSessionOrThrowException(sessionId);
@@ -65,11 +66,7 @@ public class AuthorizationController {
 
         String result = "User successfully logged out";
 
-        Map<String, String> data = new HashMap<>();
-
-        data.put("data", result);
-
-        return data;
+        return AnswerDto.makeDefault(result);
 
     }
 
