@@ -1,19 +1,18 @@
 package com.tcsp.digitalwrite.api.controller;
 
-import com.tcsp.digitalwrite.api.dto.AckDto;
-import com.tcsp.digitalwrite.api.dto.SystemDto;
+import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
+import com.tcsp.digitalwrite.api.dto.RoleDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
-import com.tcsp.digitalwrite.store.entity.SystemEntity;
+import com.tcsp.digitalwrite.store.entity.UserEntity;
 import com.tcsp.digitalwrite.store.repository.RoleRepository;
+import com.tcsp.digitalwrite.store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.Role;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,8 +23,13 @@ public class RoleController {
 
     RoleRepository roleRepository;
 
+    UserRepository userRepository;
+
+    ControllerHelper controllerHelper;
+
     public static final String FETCH_ROLES = "/api/roles";
     public static final String CREATE_ROLES = "/api/roles";
+    public static final String CHANGE_ROLES_USER = "/api/roles/change";
 
     @GetMapping(FETCH_ROLES)
     public List<String> fetchRoles() {
@@ -59,5 +63,22 @@ public class RoleController {
         data.put("data", result);
 
         return data;
+    }
+
+    @PutMapping(CHANGE_ROLES_USER)
+    public RoleDto changeRoles(
+            @RequestParam(value = "token_user") String tokenUser,
+            @RequestParam(value = "roles") List<String> roles
+    ){
+        UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
+
+        user.setRoles(roles.stream()
+                .map(role -> controllerHelper.getRoleOrThrowException(role))
+                .collect(Collectors.toSet()));
+
+        UserEntity savedUser = userRepository.saveAndFlush(user);
+
+
+        return RoleDto.makeDefault(savedUser);
     }
 }
