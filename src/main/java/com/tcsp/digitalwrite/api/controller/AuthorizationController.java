@@ -3,8 +3,6 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
-import com.tcsp.digitalwrite.api.dto.RegistrationDto;
-import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
@@ -12,10 +10,10 @@ import com.tcsp.digitalwrite.store.repository.SessionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor

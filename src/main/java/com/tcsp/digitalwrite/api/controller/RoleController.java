@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
-import javax.management.relation.Role;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -53,7 +55,7 @@ public class RoleController {
                                 .name(name)
                                 .build())
                 .orElseThrow(() ->  new BadRequestException("Role name can't be empty."));
-        System.out.println();
+
         roleRepository.save(role);
 
         String result = String.format("Role with  %s created", role.getName());
@@ -77,7 +79,6 @@ public class RoleController {
                 .collect(Collectors.toSet()));
 
         UserEntity savedUser = userRepository.saveAndFlush(user);
-
 
         return RoleDto.makeDefault(savedUser);
     }
