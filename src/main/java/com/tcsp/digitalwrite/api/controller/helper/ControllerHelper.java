@@ -86,13 +86,13 @@ public class ControllerHelper {
     public UserEntity getUserByParametersOrThrowException(
             Double typingSpeed,
             Double accuracy,
-            Double frequencyKeystroke,
+            Double holdTime,
             SystemEntity system
     ){
-       return userRepository.findByTypingSpeedAndAccuracyAndFrequencyKeystrokeAndSystem(
+       return userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
                 typingSpeed,
                 accuracy,
-                frequencyKeystroke,
+                holdTime,
                 system
         ).orElseThrow(() -> new NotFoundException("User doesn't exist"));
 

@@ -33,7 +33,7 @@ public class RegistrationController {
             @RequestParam(value = "name") String nameUser,
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
-            @RequestParam(value = "frequency_keystroke") Double frequencyKeystroke,
+            @RequestParam(value = "hold_time") Double holdTime,
             @RequestParam(value = "token_system") String tokenSystem,
             @RequestParam(value = "user_roles") List<String> userRoles
     ){
@@ -51,7 +51,7 @@ public class RegistrationController {
                 .typingSpeed(typingSpeed)
                 .name(nameUser)
                 .accuracy(accuracy)
-                .frequencyKeystroke(frequencyKeystroke)
+                .holdTime(holdTime)
                 .system(system)
                 .roles(roles)
                 .build();

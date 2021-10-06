@@ -10,6 +10,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByToken(String token);
 
-    Optional<UserEntity> findByTypingSpeedAndAccuracyAndFrequencyKeystrokeAndSystem(
-            Double typingSpeed, Double accuracy, Double frequencyKeystroke, SystemEntity system);
+    Optional<UserEntity> findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
+            Double typingSpeed, Double accuracy, Double holdTime, SystemEntity system);
 }

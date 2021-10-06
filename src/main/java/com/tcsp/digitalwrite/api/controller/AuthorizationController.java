@@ -31,7 +31,7 @@ public class AuthorizationController {
     public AuthorizationDto createSession(
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
-            @RequestParam(value = "frequency_keystroke") Double frequencyKeystroke,
+            @RequestParam(value = "hold_time") Double holdTime,
             @RequestParam(value = "token_system") String tokenSystem
     ) {
         SystemEntity system = controllerHelper.getSystemOrThrowException(tokenSystem);
@@ -39,7 +39,7 @@ public class AuthorizationController {
         UserEntity user = controllerHelper.getUserByParametersOrThrowException(
                 typingSpeed,
                 accuracy,
-                frequencyKeystroke,
+                holdTime,
                 system);
 
         String id = UUID.randomUUID().toString();

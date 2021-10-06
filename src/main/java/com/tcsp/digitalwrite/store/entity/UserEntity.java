@@ -27,7 +27,7 @@ public class UserEntity {
 
     Double accuracy;
 
-    Double frequencyKeystroke;
+    Double holdTime;
 
     @ManyToOne
     @JoinColumn(name = "system_id")
