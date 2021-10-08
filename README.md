@@ -1,6 +1,8 @@
 # Digital Write
 <p align="center"><img width="200px" src="/images/logo.png" alt="Digital write"/></p>
 
+![release][release]
+
 ## Цільова група
 Будь-який користувач, який хоче пройти аутентифікацію.
 ## Мета
