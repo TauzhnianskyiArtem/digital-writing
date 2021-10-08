@@ -1,5 +1,5 @@
 # Digital Write
-<p><img width="200px" src="/images/logo.png" alt="Digital write"/></p>
+<p align="center"><img width="200px" src="/images/logo.png" alt="Digital write"/></p>
 
 ## Цільова група
 Будь-який користувач, який хоче пройти аутентифікацію.
