@@ -1,4 +1,4 @@
-# Digital Write
+# Digital Writing
 <p align="center"><img width="200px" src="/images/logo.png" alt="Digital write"/></p>
 
 ## Цільова група
