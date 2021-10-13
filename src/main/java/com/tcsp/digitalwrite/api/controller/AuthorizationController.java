@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
@@ -56,15 +57,16 @@ public class AuthorizationController {
 
     @DeleteMapping(DELETE_SESSION)
     public AnswerDto deleteSession(
-            @PathVariable("session_id") String sessionId
+            @PathVariable("session_id") String sessionId,
+            @RequestParam("token_system") String tokenSystem
     ){
+        controllerHelper.getSystemOrThrowException(tokenSystem);
+
         SessionEntity session = controllerHelper.getSessionOrThrowException(sessionId);
 
         sessionRepository.delete(session);
 
-        String result = "User successfully logged out";
-
-        return AnswerDto.makeDefault(result);
+        return AnswerDto.makeDefault(Constants.DELETE_SESSION);
 
     }
 

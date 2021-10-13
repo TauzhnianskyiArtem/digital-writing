@@ -16,6 +16,8 @@ import java.time.Instant;
 @Table(name = "session")
 public class SessionEntity {
 
+    private static final int EXPIRED_SECONDS = 60 * 60;
+
     @Id
     String id;
 
@@ -25,4 +27,7 @@ public class SessionEntity {
 
     @Builder.Default
     Instant createdAt = Instant.now();
+
+    @Builder.Default
+    Instant expiredAt = Instant.now().plusSeconds(EXPIRED_SECONDS);
 }

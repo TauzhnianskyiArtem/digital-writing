@@ -1,8 +1,10 @@
 package com.tcsp.digitalwrite.api.controller;
 
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RoleDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
 import com.tcsp.digitalwrite.store.repository.RoleRepository;
@@ -12,9 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,8 @@ public class RoleController {
 
     public static final String FETCH_ROLES = "/api/roles";
     public static final String CREATE_ROLES = "/api/roles";
-    public static final String CHANGE_ROLES_USER = "/api/roles/change";
+    public static final String CHANGE_ROLES_USER = "/api/users/roles/change";
+    public static final String FETCH_ROLES_USER = "/api/users/roles";
 
     @GetMapping(FETCH_ROLES)
     public List<String> fetchRoles() {
@@ -44,9 +45,12 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
-    public Map<String, String> createSystem(
-            @RequestParam(value = "name") Optional<String> optionalName
+    public AnswerDto createSystem(
+            @RequestParam(value = "name") Optional<String> optionalName,
+            @RequestParam(value = "token_system") String tokenSystem
     ){
+        controllerHelper.getSystemOrThrowException(tokenSystem);
+
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
 
         RoleEntity role = optionalName
@@ -54,24 +58,21 @@ public class RoleController {
                         RoleEntity.builder()
                                 .name(name)
                                 .build())
-                .orElseThrow(() ->  new BadRequestException("Role name can't be empty."));
+                .orElseThrow(() ->  new BadRequestException(Constants.ROLE_EMPTY));
 
         roleRepository.save(role);
 
-        String result = String.format("Role with  %s created", role.getName());
-
-        Map<String, String> data = new HashMap<>();
-
-        data.put("data", result);
-
-        return data;
+        return AnswerDto.makeDefault(Constants.CREATE_ROLE);
     }
 
     @PutMapping(CHANGE_ROLES_USER)
     public RoleDto changeRoles(
             @RequestParam(value = "token_user") String tokenUser,
-            @RequestParam(value = "roles") List<String> roles
+            @RequestParam(value = "roles") List<String> roles,
+            @RequestParam(value = "token_system") String tokenSystem
     ){
+        controllerHelper.getSystemOrThrowException(tokenSystem);
+
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 
         user.setRoles(roles.stream()
@@ -81,5 +82,20 @@ public class RoleController {
         UserEntity savedUser = userRepository.saveAndFlush(user);
 
         return RoleDto.makeDefault(savedUser);
+    }
+
+    @GetMapping(FETCH_ROLES_USER)
+    public List<String> fetchRolesByUser(
+            @RequestParam(value = "token_user") String tokenUser,
+            @RequestParam(value = "token_system") String tokenSystem
+    ){
+        controllerHelper.getSystemOrThrowException(tokenSystem);
+
+        UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
+
+        List<String> roles = user.getRoles().stream().map( r -> r.getName()).collect(Collectors.toList());
+
+        return roles;
+
     }
 }

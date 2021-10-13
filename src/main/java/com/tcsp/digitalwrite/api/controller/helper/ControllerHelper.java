@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.controller.helper;
 
 import com.tcsp.digitalwrite.api.exception.NotFoundException;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
@@ -13,7 +14,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -35,12 +35,7 @@ public class ControllerHelper {
         return systemRepository
                 .findByToken(tokenSystem)
                 .orElseThrow(() ->
-                        new NotFoundException(
-                                String.format(
-                                        "System with \"%s\" doesn't exist.",
-                                        tokenSystem
-                                )
-                        )
+                        new NotFoundException(Constants.NOT_EXIST_SYSTEM)
                 );
     }
 
@@ -48,25 +43,15 @@ public class ControllerHelper {
         return roleRepository
                 .findByName(name)
                 .orElseThrow(() ->
-                        new NotFoundException(
-                                String.format(
-                                        "Role with \"%s\" doesn't exist.",
-                                        name
-                                )
-                        )
+                        new NotFoundException(Constants.NOT_EXIST_ROLE)
                 );
     }
 
-    public UserEntity getUserOrThrowException(String token){
+    public UserEntity getUserOrThrowException(String tokenUser){
         return userRepository
-                .findByToken(token)
+                .findByToken(tokenUser)
                 .orElseThrow(() ->
-                        new NotFoundException(
-                                String.format(
-                                        "User with \"%s\" doesn't exist.",
-                                        token
-                                )
-                        )
+                        new NotFoundException(Constants.NOT_EXIST_USER)
                 );
     }
 
@@ -74,12 +59,7 @@ public class ControllerHelper {
         return sessionRepository
                 .findById(sessionId)
                 .orElseThrow(() ->
-                        new NotFoundException(
-                                String.format(
-                                        "Session with \"%s\" doesn't exist.",
-                                        sessionId
-                                )
-                        )
+                        new NotFoundException(Constants.NOT_EXIST_SESSION)
                 );
     }
 
@@ -94,7 +74,7 @@ public class ControllerHelper {
                 accuracy,
                 holdTime,
                 system
-        ).orElseThrow(() -> new NotFoundException("User doesn't exist"));
+        ).orElseThrow(() -> new NotFoundException(Constants.NOT_EXIST_USER));
 
 
     }

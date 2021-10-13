@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RegistrationDto;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
@@ -63,14 +64,15 @@ public class RegistrationController {
 
     @DeleteMapping(DELETE_USER)
     public AnswerDto deleteUser(
-            @PathVariable(value = "token_user") String tokenUser
+            @PathVariable(value = "token_user") String tokenUser,
+            @RequestParam(value = "token_system") String tokenSystem
     ){
+        controllerHelper.getSystemOrThrowException(tokenSystem);
+
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 
         userRepository.delete(user);
 
-        String result = String.format("User with %s deleted successfully", tokenUser);
-
-        return AnswerDto.makeDefault(result);
+        return AnswerDto.makeDefault(Constants.DELETE_USER);
     }
 }

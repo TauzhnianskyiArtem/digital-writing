@@ -4,6 +4,7 @@ import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.SystemDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.repository.SystemRepository;
 import lombok.AccessLevel;
@@ -11,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,7 +40,7 @@ public class SystemController {
                             .name(name)
                             .token(token)
                             .build())
-                .orElseThrow(() ->  new BadRequestException("System name can't be empty."));
+                .orElseThrow(() ->  new BadRequestException(Constants.SYSTEM_NAME_EMPTY));
 
         SystemEntity savedSystem = systemRepository.saveAndFlush(system);
 
@@ -55,9 +54,7 @@ public class SystemController {
 
         systemRepository.delete(system);
 
-        String result = String.format("System with %s deleted successfully", tokenSystem);
-
-        return AnswerDto.makeDefault(result);
+        return AnswerDto.makeDefault(Constants.DELETE_SYSTEM);
     }
 
 }
