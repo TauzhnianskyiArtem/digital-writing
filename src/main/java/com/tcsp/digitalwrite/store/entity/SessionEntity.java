@@ -1,5 +1,6 @@
 package com.tcsp.digitalwrite.store.entity;
 
+import com.tcsp.digitalwrite.shared.Constants;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,8 +17,6 @@ import java.time.Instant;
 @Table(name = "session")
 public class SessionEntity {
 
-    private static final int EXPIRED_SECONDS = 60 * 60;
-
     @Id
     String id;
 
@@ -29,5 +28,5 @@ public class SessionEntity {
     Instant createdAt = Instant.now();
 
     @Builder.Default
-    Instant expiredAt = Instant.now().plusSeconds(EXPIRED_SECONDS);
+    Instant expiredAt = Instant.now().plusSeconds(Constants.EXPIRED_SECONDS);
 }

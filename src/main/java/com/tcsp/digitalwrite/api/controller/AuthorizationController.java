@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
+import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
@@ -14,6 +15,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import java.util.UUID;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -50,9 +52,15 @@ public class AuthorizationController {
                 .user(user)
                 .build();
 
-        SessionEntity savedSession = sessionRepository.saveAndFlush(session);
+        try {
 
-        return AuthorizationDto.makeDefault(savedSession);
+            SessionEntity savedSession = sessionRepository.saveAndFlush(session);
+            return AuthorizationDto.makeDefault(savedSession);
+
+        } catch (PersistenceException e) {
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
+
     }
 
     @DeleteMapping(DELETE_SESSION)
@@ -64,7 +72,11 @@ public class AuthorizationController {
 
         SessionEntity session = controllerHelper.getSessionOrThrowException(sessionId);
 
-        sessionRepository.delete(session);
+        try {
+            sessionRepository.delete(session);
+        } catch (PersistenceException e) {
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
 
         return AnswerDto.makeDefault(Constants.DELETE_SESSION);
 

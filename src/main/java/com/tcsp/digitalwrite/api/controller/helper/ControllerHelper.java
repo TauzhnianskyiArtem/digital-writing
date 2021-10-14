@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.controller.helper;
 
 import com.tcsp.digitalwrite.api.exception.NotFoundException;
+import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
@@ -14,6 +15,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+
+import javax.persistence.PersistenceException;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -31,36 +34,52 @@ public class ControllerHelper {
 
 
     public SystemEntity getSystemOrThrowException(String tokenSystem) {
-
-        return systemRepository
-                .findByToken(tokenSystem)
-                .orElseThrow(() ->
-                        new NotFoundException(Constants.NOT_EXIST_SYSTEM)
-                );
+        try {
+            return systemRepository
+                    .findByToken(tokenSystem)
+                    .orElseThrow(() ->
+                            new NotFoundException(Constants.NOT_EXIST_SYSTEM)
+                    );
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 
     public RoleEntity getRoleOrThrowException(String name){
-        return roleRepository
-                .findByName(name)
-                .orElseThrow(() ->
-                        new NotFoundException(Constants.NOT_EXIST_ROLE)
-                );
+        try {
+            return roleRepository
+                    .findByName(name)
+                    .orElseThrow(() ->
+                            new NotFoundException(Constants.NOT_EXIST_ROLE)
+                    );
+
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 
     public UserEntity getUserOrThrowException(String tokenUser){
-        return userRepository
-                .findByToken(tokenUser)
-                .orElseThrow(() ->
-                        new NotFoundException(Constants.NOT_EXIST_USER)
-                );
+        try {
+            return userRepository
+                    .findByToken(tokenUser)
+                    .orElseThrow(() ->
+                            new NotFoundException(Constants.NOT_EXIST_USER)
+                    );
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 
     public SessionEntity getSessionOrThrowException(String sessionId){
-        return sessionRepository
-                .findById(sessionId)
-                .orElseThrow(() ->
-                        new NotFoundException(Constants.NOT_EXIST_SESSION)
-                );
+        try {
+            return sessionRepository
+                    .findById(sessionId)
+                    .orElseThrow(() ->
+                            new NotFoundException(Constants.NOT_EXIST_SESSION)
+                    );
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 
     public UserEntity getUserByParametersOrThrowException(
@@ -69,13 +88,14 @@ public class ControllerHelper {
             Double holdTime,
             SystemEntity system
     ){
-       return userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
-                typingSpeed,
-                accuracy,
-                holdTime,
-                system
-        ).orElseThrow(() -> new NotFoundException(Constants.NOT_EXIST_USER));
-
-
+        try {
+            return userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
+                    typingSpeed,
+                    accuracy,
+                    holdTime,
+                    system).orElseThrow(() -> new NotFoundException(Constants.NOT_EXIST_USER));
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 }

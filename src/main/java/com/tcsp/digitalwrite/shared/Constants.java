@@ -21,4 +21,8 @@ public interface Constants {
     String DELETE_SYSTEM = "System deleted successfully";
 
     String NOT_EXIST_SYSTEM = "System doesn't exist";
+
+    String ERROR_SERVICE = "Error in the service";
+
+    int EXPIRED_SECONDS = 60 * 60;
 }

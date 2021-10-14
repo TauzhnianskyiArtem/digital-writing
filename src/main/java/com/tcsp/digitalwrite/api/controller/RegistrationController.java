@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RegistrationDto;
+import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,9 +59,13 @@ public class RegistrationController {
                 .roles(roles)
                 .build();
 
-        UserEntity savedUser = userRepository.saveAndFlush(user);
+        try {
+            UserEntity savedUser = userRepository.saveAndFlush(user);
+            return RegistrationDto.makeDefault(savedUser);
+        } catch (PersistenceException e) {
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
 
-        return RegistrationDto.makeDefault(savedUser);
     }
 
     @DeleteMapping(DELETE_USER)
@@ -71,7 +77,11 @@ public class RegistrationController {
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 
-        userRepository.delete(user);
+        try {
+            userRepository.delete(user);
+        } catch (PersistenceException e) {
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
 
         return AnswerDto.makeDefault(Constants.DELETE_USER);
     }

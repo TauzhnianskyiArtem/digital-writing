@@ -4,6 +4,7 @@ import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RoleDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
+import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +37,10 @@ public class RoleController {
     public static final String FETCH_ROLES_USER = "/api/users/roles";
 
     @GetMapping(FETCH_ROLES)
-    public List<String> fetchRoles() {
+    public List<String> fetchRoles(
+            @RequestParam(value = "token_system") String tokenSystem
+    ) {
+        controllerHelper.getSystemOrThrowException(tokenSystem);
 
         List<RoleEntity> roles = roleRepository.findAll();
 
@@ -60,9 +65,12 @@ public class RoleController {
                                 .build())
                 .orElseThrow(() ->  new BadRequestException(Constants.ROLE_EMPTY));
 
-        roleRepository.save(role);
-
-        return AnswerDto.makeDefault(Constants.CREATE_ROLE);
+        try {
+            roleRepository.save(role);
+            return AnswerDto.makeDefault(Constants.CREATE_ROLE);
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
     }
 
     @PutMapping(CHANGE_ROLES_USER)
@@ -79,9 +87,15 @@ public class RoleController {
                 .map(role -> controllerHelper.getRoleOrThrowException(role))
                 .collect(Collectors.toSet()));
 
-        UserEntity savedUser = userRepository.saveAndFlush(user);
+        try {
 
-        return RoleDto.makeDefault(savedUser);
+            UserEntity savedUser = userRepository.saveAndFlush(user);
+            return RoleDto.makeDefault(savedUser);
+
+        } catch (PersistenceException e){
+            throw new SystemException(Constants.ERROR_SERVICE);
+        }
+
     }
 
     @GetMapping(FETCH_ROLES_USER)
@@ -89,6 +103,7 @@ public class RoleController {
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "token_system") String tokenSystem
     ){
+
         controllerHelper.getSystemOrThrowException(tokenSystem);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
