@@ -5,4 +5,4 @@ jdk:
 script: mvn clean install
 
 notifications:
-  email: javatechie4u@gmail.com
+  email: art121bog@gmail.com
