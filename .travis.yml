@@ -3,6 +3,3 @@ jdk:
   - openjdk8
 
 script: mvn clean install
-
-notifications:
-  email: art121bog@gmail.com
