@@ -104,13 +104,13 @@ public class RoleController {
             @RequestParam(value = "token_system") String tokenSystem
     ){
 
-        controllerHelper.getSystemOrThrowException(tokenSystem);
-
-        UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
-
-        List<String> roles = user.getRoles().stream().map( r -> r.getName()).collect(Collectors.toList());
-
-        return roles;
+//        controllerHelper.getSystemOrThrowException(tokenSystem);
+//
+//        UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
+//
+//        List<String> roles = user.getRoles().stream().map( r -> r.getName()).collect(Collectors.toList());
+//
+//        return roles;
 
     }
 }
