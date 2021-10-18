@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface SystemRepository extends JpaRepository<SystemEntity, Long> {
+public interface SystemRepository extends JpaRepository<SystemEntity, String> {
 
-    Optional<SystemEntity> findByToken(String token);
+    Optional<SystemEntity> findById(String id);
 }

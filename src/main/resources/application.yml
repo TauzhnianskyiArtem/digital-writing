@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/digital-write
     username: postgres
-    password: av@YxKWGeHN9Jrq
+    password: 121art121
   jpa:
     generate-ddl: true
     open-in-view: false

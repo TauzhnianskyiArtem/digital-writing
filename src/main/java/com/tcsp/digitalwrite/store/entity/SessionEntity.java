@@ -20,9 +20,13 @@ public class SessionEntity {
     @Id
     String id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     UserEntity user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    RoleEntity role;
 
     @Builder.Default
     Instant createdAt = Instant.now();

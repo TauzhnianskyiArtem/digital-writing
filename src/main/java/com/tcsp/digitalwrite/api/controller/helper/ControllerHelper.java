@@ -33,10 +33,10 @@ public class ControllerHelper {
 
 
 
-    public SystemEntity getSystemOrThrowException(String tokenSystem) {
+    public SystemEntity getSystemOrThrowException(String systemId) {
         try {
             return systemRepository
-                    .findByToken(tokenSystem)
+                    .findById(systemId)
                     .orElseThrow(() ->
                             new NotFoundException(Constants.NOT_EXIST_SYSTEM)
                     );
@@ -97,5 +97,12 @@ public class ControllerHelper {
         } catch (PersistenceException e){
             throw new SystemException(Constants.ERROR_SERVICE);
         }
+    }
+
+    public void checkUserRoleOrThrowException(UserEntity user, RoleEntity role){
+        user.getRoles().stream()
+                .filter(r -> r.equals(role))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException(Constants.NOT_USER_ROLE));
     }
 }

@@ -19,10 +19,7 @@ import java.util.List;
 public class SystemEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
-
-    String token;
+    String id;
 
     String name;
 

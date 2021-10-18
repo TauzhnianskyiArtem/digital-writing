@@ -6,6 +6,10 @@ public interface Constants {
 
     String NOT_EXIST_SESSION = "Session doesn't exist";
 
+    String SUCCESS_AUTHORIZED = "User is successfully authorized";
+
+    String SUCCESS_REGISTERED = "User registered successfully";
+
     String DELETE_USER = "User deleted successfully";
 
     String NOT_EXIST_USER = "User doesn't exist";
@@ -14,7 +18,11 @@ public interface Constants {
 
     String CREATE_ROLE = "Role is successfully created";
 
+    String CHANGE_ROLES = "Roles changed";
+
     String NOT_EXIST_ROLE = "Role doesn't exist";
+
+    String NOT_USER_ROLE = "User doesn't have the role";
 
     String SYSTEM_NAME_EMPTY = "System name can't be empty";
 

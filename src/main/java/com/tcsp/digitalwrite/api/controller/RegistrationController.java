@@ -37,10 +37,10 @@ public class RegistrationController {
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
             @RequestParam(value = "hold_time") Double holdTime,
-            @RequestParam(value = "token_system") String tokenSystem,
+            @RequestParam(value = "system_id") String systemId,
             @RequestParam(value = "user_roles") List<String> userRoles
     ){
-        SystemEntity system = controllerHelper.getSystemOrThrowException(tokenSystem);
+        SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 
         Set<RoleEntity> roles = userRoles.stream()
                 .map(role -> controllerHelper.getRoleOrThrowException(role))
@@ -71,9 +71,9 @@ public class RegistrationController {
     @DeleteMapping(DELETE_USER)
     public AnswerDto deleteUser(
             @PathVariable(value = "token_user") String tokenUser,
-            @RequestParam(value = "token_system") String tokenSystem
+            @RequestParam(value = "system_id") String systemId
     ){
-        controllerHelper.getSystemOrThrowException(tokenSystem);
+        controllerHelper.getSystemOrThrowException(systemId);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 

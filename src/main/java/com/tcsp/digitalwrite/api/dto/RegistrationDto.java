@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +25,7 @@ public class RegistrationDto {
 
     @NonNull
     @Builder.Default
-    String data = "User registered successfully";
+    String data = Constants.SUCCESS_REGISTERED;
 
     @NonNull
     @JsonProperty("roles")

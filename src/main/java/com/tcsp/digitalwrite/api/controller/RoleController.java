@@ -38,9 +38,9 @@ public class RoleController {
 
     @GetMapping(FETCH_ROLES)
     public List<String> fetchRoles(
-            @RequestParam(value = "token_system") String tokenSystem
+            @RequestParam(value = "system_id") String systemId
     ) {
-        controllerHelper.getSystemOrThrowException(tokenSystem);
+        controllerHelper.getSystemOrThrowException(systemId);
 
         List<RoleEntity> roles = roleRepository.findAll();
 
@@ -77,9 +77,9 @@ public class RoleController {
     public RoleDto changeRoles(
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "roles") List<String> roles,
-            @RequestParam(value = "token_system") String tokenSystem
+            @RequestParam(value = "system_id") String systemId
     ){
-        controllerHelper.getSystemOrThrowException(tokenSystem);
+        controllerHelper.getSystemOrThrowException(systemId);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 
@@ -101,10 +101,10 @@ public class RoleController {
     @GetMapping(FETCH_ROLES_USER)
     public List<String> fetchRolesByUser(
             @RequestParam(value = "token_user") String tokenUser,
-            @RequestParam(value = "token_system") String tokenSystem
+            @RequestParam(value = "system_id") String systemId
     ){
 
-        controllerHelper.getSystemOrThrowException(tokenSystem);
+        controllerHelper.getSystemOrThrowException(systemId);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
 

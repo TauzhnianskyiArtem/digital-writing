@@ -14,8 +14,8 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SystemDto {
     @NonNull
-    @JsonProperty("token_system")
-    String tokenSystem;
+    @JsonProperty("system_id")
+    String systemId;
 
     @NonNull
     String name;
@@ -26,7 +26,7 @@ public class SystemDto {
 
     public static SystemDto makeDefault(SystemEntity entity){
         return SystemDto.builder()
-                .tokenSystem(entity.getToken())
+                .systemId(entity.getId())
                 .name(entity.getName())
                 .createdAt(entity.getCreatedAt())
                 .build();

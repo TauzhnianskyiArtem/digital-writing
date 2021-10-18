@@ -27,20 +27,20 @@ public class SystemController {
     ControllerHelper controllerHelper;
 
     public static final String CREATE_SYSTEM = "/api/systems";
-    public static final String DELETE_SYSTEM = "/api/systems/{token_system}";
+    public static final String DELETE_SYSTEM = "/api/systems/{system_id}";
 
     @PostMapping(CREATE_SYSTEM)
     public SystemDto createSystem(
             @RequestParam(value = "name") Optional<String> optionalName
     ){
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
-        String token = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
 
         SystemEntity system = optionalName
                 .map((name) ->
                         SystemEntity.builder()
                                 .name(name)
-                                .token(token)
+                                .id(id)
                                 .build())
                 .orElseThrow(() ->  new BadRequestException(Constants.SYSTEM_NAME_EMPTY));
 
@@ -53,9 +53,9 @@ public class SystemController {
     }
 
     @DeleteMapping(DELETE_SYSTEM)
-    public AnswerDto deleteSystem(@PathVariable("token_system") String tokenSystem) {
+    public AnswerDto deleteSystem(@PathVariable("system_id") String systemId) {
 
-        SystemEntity system = controllerHelper.getSystemOrThrowException(tokenSystem);
+        SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 
         try {
             systemRepository.delete(system);

@@ -1,6 +1,7 @@
 package com.tcsp.digitalwrite.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +22,7 @@ public class RoleDto {
 
     @NonNull
     @Builder.Default
-    String data = "Roles changed";
+    String data = Constants.CHANGE_ROLES;
 
     @NonNull
     @JsonProperty("roles")
