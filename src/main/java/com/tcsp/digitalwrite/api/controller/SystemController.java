@@ -33,8 +33,13 @@ public class SystemController {
     public SystemDto createSystem(
             @RequestParam(value = "name") Optional<String> optionalName
     ){
+
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
         String id = UUID.randomUUID().toString();
+
+        if (optionalName.isPresent() && systemRepository.existsByName(optionalName.get())) {
+            throw new BadRequestException(Constants.EXIST_SYSTEM);
+        }
 
         SystemEntity system = optionalName
                 .map((name) ->

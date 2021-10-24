@@ -16,7 +16,7 @@ import java.util.Set;
 @Table(name = "usr")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     String token;

@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface SystemRepository extends JpaRepository<SystemEntity, String> {
 
     Optional<SystemEntity> findById(String id);
+
+    boolean existsByName(String name);
 }

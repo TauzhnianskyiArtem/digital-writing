@@ -58,6 +58,10 @@ public class RoleController {
 
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
 
+        if (optionalName.isPresent() && roleRepository.existsByName(optionalName.get())) {
+            throw new BadRequestException(Constants.EXIST_ROLE);
+        }
+
         RoleEntity role = optionalName
                 .map((name) ->
                         RoleEntity.builder()

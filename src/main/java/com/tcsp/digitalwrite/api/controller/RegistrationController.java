@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.RegistrationDto;
+import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
@@ -33,14 +34,18 @@ public class RegistrationController {
 
     @PostMapping(CREATE_USER)
     public RegistrationDto registerUser(
-            @RequestParam(value = "name") String nameUser,
+            @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
             @RequestParam(value = "hold_time") Double holdTime,
             @RequestParam(value = "system_id") String systemId,
             @RequestParam(value = "user_roles") List<String> userRoles
     ){
+        optionalName = optionalName.filter( name -> !name.trim().isEmpty());
+
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
+
+
 
         Set<RoleEntity> roles = userRoles.stream()
                 .map(role -> controllerHelper.getRoleOrThrowException(role))
@@ -48,16 +53,19 @@ public class RegistrationController {
 
         String token = UUID.randomUUID().toString();
 
-        UserEntity user = UserEntity
-                .builder()
-                .token(token)
-                .typingSpeed(typingSpeed)
-                .name(nameUser)
-                .accuracy(accuracy)
-                .holdTime(holdTime)
-                .system(system)
-                .roles(roles)
-                .build();
+        UserEntity user = optionalName.map(nameUser -> {
+            UserEntity userBuild = UserEntity
+                    .builder()
+                    .token(token)
+                    .typingSpeed(typingSpeed)
+                    .name(nameUser)
+                    .accuracy(accuracy)
+                    .holdTime(holdTime)
+                    .system(system)
+                    .roles(roles)
+                    .build();
+            return userBuild;
+        }).orElseThrow(() -> new BadRequestException(Constants.USER_NAME_EMPTY));
 
         try {
             UserEntity savedUser = userRepository.saveAndFlush(user);
@@ -65,7 +73,6 @@ public class RegistrationController {
         } catch (PersistenceException e) {
             throw new SystemException(Constants.ERROR_SERVICE);
         }
-
     }
 
     @DeleteMapping(DELETE_USER)

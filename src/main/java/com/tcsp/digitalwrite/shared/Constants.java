@@ -20,13 +20,19 @@ public interface Constants {
 
     String CHANGE_ROLES = "Roles changed";
 
+    String EXIST_ROLE = "Role with such name already exists";
+
     String NOT_EXIST_ROLE = "Role doesn't exist";
 
     String NOT_USER_ROLE = "User doesn't have the role";
 
+    String USER_NAME_EMPTY = "User name can't be empty";
+
     String SYSTEM_NAME_EMPTY = "System name can't be empty";
 
     String DELETE_SYSTEM = "System deleted successfully";
+
+    String EXIST_SYSTEM = "System with such name already exists";
 
     String NOT_EXIST_SYSTEM = "System doesn't exist";
 

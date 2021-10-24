@@ -1,11 +1,11 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/digital-write
-    username: postgres
-    password: 121art121
-  jpa:
-    generate-ddl: true
-    open-in-view: false
+#spring:
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/digital-write
+#    username: postgres
+#    password: 121art121
+#  jpa:
+#    generate-ddl: true
+#    open-in-view: false
 
 server:
   port: 9000

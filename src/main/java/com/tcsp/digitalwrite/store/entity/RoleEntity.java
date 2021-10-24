@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "role")
 public class RoleEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
     String name;
