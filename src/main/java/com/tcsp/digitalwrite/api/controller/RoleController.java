@@ -2,7 +2,7 @@ package com.tcsp.digitalwrite.api.controller;
 
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
-import com.tcsp.digitalwrite.api.dto.RoleDto;
+import com.tcsp.digitalwrite.api.dto.RoleChangeDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
@@ -50,11 +50,11 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
-    public AnswerDto createSystem(
+    public AnswerDto createRole(
             @RequestParam(value = "name") Optional<String> optionalName,
-            @RequestParam(value = "token_system") String tokenSystem
+            @RequestParam(value = "system_id") String systemId
     ){
-        controllerHelper.getSystemOrThrowException(tokenSystem);
+        controllerHelper.getSystemOrThrowException(systemId);
 
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
 
@@ -74,7 +74,7 @@ public class RoleController {
     }
 
     @PutMapping(CHANGE_ROLES_USER)
-    public RoleDto changeRoles(
+    public RoleChangeDto changeRoles(
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "roles") List<String> roles,
             @RequestParam(value = "system_id") String systemId
@@ -90,7 +90,7 @@ public class RoleController {
         try {
 
             UserEntity savedUser = userRepository.saveAndFlush(user);
-            return RoleDto.makeDefault(savedUser);
+            return RoleChangeDto.makeDefault(savedUser);
 
         } catch (PersistenceException e){
             throw new SystemException(Constants.ERROR_SERVICE);

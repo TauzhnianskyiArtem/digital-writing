@@ -16,11 +16,7 @@ import java.time.Instant;
 public class AuthorizationDto {
 
     @NonNull
-    String name;
-
-    @NonNull
-    @JsonProperty("token_user")
-    String tokenUser;
+    String nameUser;
 
     @NonNull
     @JsonProperty("session_id")
@@ -38,13 +34,16 @@ public class AuthorizationDto {
     @JsonProperty("expired_at")
     Instant expiredAt;
 
+    @NonNull
+    String role;
+
     public static AuthorizationDto makeDefault(SessionEntity entity){
         return AuthorizationDto.builder()
-                .name(entity.getUser().getName())
-                .tokenUser(entity.getUser().getToken())
+                .nameUser(entity.getUser().getName())
                 .sessionId(entity.getId())
                 .createdAt(entity.getCreatedAt())
                 .expiredAt(entity.getExpiredAt())
+                .role(entity.getRole().getName())
                 .build();
 
     }

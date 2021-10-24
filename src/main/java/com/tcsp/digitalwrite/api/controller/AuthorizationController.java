@@ -32,7 +32,7 @@ public class AuthorizationController {
     public static final String DELETE_SESSION = "/api/users/auth/{session_id}";
 
     @PostMapping(CREATE_SESSION)
-    public AuthorizationDto createSession(
+    public AuthorizationDto authorizeUser(
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
             @RequestParam(value = "hold_time") Double holdTime,
@@ -72,7 +72,7 @@ public class AuthorizationController {
     }
 
     @DeleteMapping(DELETE_SESSION)
-    public AnswerDto deleteSession(
+    public AnswerDto logOutUser(
             @PathVariable("session_id") String sessionId,
             @RequestParam(value = "system_id") String systemId
     ){

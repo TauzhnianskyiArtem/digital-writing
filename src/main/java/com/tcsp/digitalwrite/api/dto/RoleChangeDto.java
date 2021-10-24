@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RoleDto {
+public class RoleChangeDto {
 
     @NonNull
     @JsonProperty("token_user")
@@ -28,8 +28,8 @@ public class RoleDto {
     @JsonProperty("roles")
     List<String> roles;
 
-    public static RoleDto makeDefault(UserEntity user){
-        return RoleDto.builder()
+    public static RoleChangeDto makeDefault(UserEntity user){
+        return RoleChangeDto.builder()
                 .tokenUser(user.getToken())
                 .roles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList()))
                 .build();

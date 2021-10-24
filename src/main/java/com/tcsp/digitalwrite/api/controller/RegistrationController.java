@@ -32,7 +32,7 @@ public class RegistrationController {
     public static final String DELETE_USER = "/api/systems/registration/users/{token_user}";
 
     @PostMapping(CREATE_USER)
-    public RegistrationDto createUser(
+    public RegistrationDto registerUser(
             @RequestParam(value = "name") String nameUser,
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
