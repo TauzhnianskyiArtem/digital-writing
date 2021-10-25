@@ -24,7 +24,7 @@ public class SessionEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     UserEntity user;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     RoleEntity role;
 

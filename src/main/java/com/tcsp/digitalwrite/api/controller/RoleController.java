@@ -36,6 +36,7 @@ public class RoleController {
     public static final String CHANGE_ROLES_USER = "/api/users/roles/change";
     public static final String FETCH_ROLES_USER = "/api/users/roles";
 
+
     @GetMapping(FETCH_ROLES)
     public List<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
