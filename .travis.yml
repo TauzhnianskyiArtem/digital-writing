@@ -3,4 +3,4 @@ jdk:
   - openjdk8
 
 script:
-  - mvn -Dtest=*Tests test
+  - mvn -Dtest=System* test
