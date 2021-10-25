@@ -41,6 +41,7 @@ public class RegistrationController {
             @RequestParam(value = "system_id") String systemId,
             @RequestParam(value = "user_roles") List<String> userRoles
     ){
+        System.out.println();
         optionalName = optionalName.filter( name -> !name.trim().isEmpty());
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);

@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.List;
 
@@ -29,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.yml")
 public class SystemControllerTests {
 
+    String nameSystem = "Test system";
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -41,22 +42,21 @@ public class SystemControllerTests {
 
     @Test
     public void addSystem() throws Exception {
-        String nameSystem = "Test system";
 
         MvcResult result = mockMvc.perform(post(SystemController.CREATE_SYSTEM)
-                .param("name", nameSystem))
+                .param("name", this.nameSystem))
                 .andExpect(status().isOk())
                 .andReturn();
         SystemDto system = objectMapper.readValue(result.getResponse().getContentAsString(), SystemDto.class);
-        assert(system.getName().equals(nameSystem));
+        assert(system.getName().equals(this.nameSystem));
 
     }
 
     @Test
     public void deleteSystem() throws Exception {
-        List<SystemEntity> systems = systemRepository.findAll();
+        SystemEntity system = systemRepository.findByName(this.nameSystem).get();
 
-        mockMvc.perform(delete(SystemController.DELETE_SYSTEM.replace("{system_id}", systems.get(0).getId())))
+        mockMvc.perform(delete(SystemController.DELETE_SYSTEM.replace("{system_id}", system.getId())))
                 .andExpect(status().isOk());
     }
 

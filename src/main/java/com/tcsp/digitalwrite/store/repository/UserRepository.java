@@ -10,6 +10,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByToken(String token);
 
+    UserEntity findByName(String name);
+
     Optional<UserEntity> findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
             Double typingSpeed, Double accuracy, Double holdTime, SystemEntity system);
 }
