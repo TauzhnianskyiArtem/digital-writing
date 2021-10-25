@@ -44,7 +44,8 @@ public class SystemControllerTests {
     public void addSystem() throws Exception {
 
         MvcResult result = mockMvc.perform(post(SystemController.CREATE_SYSTEM)
-                .param("name", this.nameSystem))
+                .param("name", this.nameSystem
+                ))
                 .andExpect(status().isOk())
                 .andReturn();
         SystemDto system = objectMapper.readValue(result.getResponse().getContentAsString(), SystemDto.class);
@@ -54,6 +55,7 @@ public class SystemControllerTests {
 
     @Test
     public void deleteSystem() throws Exception {
+
         SystemEntity system = systemRepository.findByName(this.nameSystem).get();
 
         mockMvc.perform(delete(SystemController.DELETE_SYSTEM.replace("{system_id}", system.getId())))

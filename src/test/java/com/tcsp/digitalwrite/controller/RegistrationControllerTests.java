@@ -45,7 +45,7 @@ public class RegistrationControllerTests {
 
     //    Test User
     String nameSystem = "System 1";
-    String name = "User 1";
+    String name = "Test User";
     Double typingSpeed = 80d;
     Double accuracy = 1d;
     Double holdTime = 0.3d;
@@ -61,7 +61,7 @@ public class RegistrationControllerTests {
                         .param("typing_speed", this.typingSpeed.toString())
                         .param("accuracy", this.accuracy.toString())
                         .param("hold_time", this.holdTime.toString())
-                        .param("user_roles", "USER", "ADMIN"))
+                        .param("user_roles", "USER"))
                 .andExpect(status().isOk())
                 .andReturn();
         RegistrationDto user = objectMapper
