@@ -1,11 +1,15 @@
 spring:
+  h2:
+    console.enabled: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/digital-write
-    username: postgres
-    password: 121art121
+    url: jdbc:h2:file:./data/testDB
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
   jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
-    open-in-view: false
-
+    hibernate:
+      ddl-auto: update
 server:
   port: 9000
