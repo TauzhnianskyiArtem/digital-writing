@@ -13,12 +13,14 @@ import com.tcsp.digitalwrite.store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +43,14 @@ public class RegistrationController {
             @RequestParam(value = "system_id") String systemId,
             @RequestParam(value = "user_roles") List<String> userRoles
     ){
-        System.out.println();
+        log.debug("name: " + optionalName.get());
+        log.debug("typingSpeed: " + typingSpeed);
+        log.debug("accuracy: " + accuracy);
+        log.debug("holdTime: " + holdTime);
+        log.debug("systemId: " + systemId);
+        log.debug("roles: " + userRoles);
+
+
         optionalName = optionalName.filter( name -> !name.trim().isEmpty());
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
@@ -54,9 +63,8 @@ public class RegistrationController {
 
         String token = UUID.randomUUID().toString();
 
-        UserEntity user = optionalName.map(nameUser -> {
-            UserEntity userBuild = UserEntity
-                    .builder()
+        UserEntity user = optionalName.map(nameUser ->
+            UserEntity.builder()
                     .token(token)
                     .typingSpeed(typingSpeed)
                     .name(nameUser)
@@ -64,14 +72,18 @@ public class RegistrationController {
                     .holdTime(holdTime)
                     .system(system)
                     .roles(roles)
-                    .build();
-            return userBuild;
-        }).orElseThrow(() -> new BadRequestException(Constants.USER_NAME_EMPTY));
+                    .build()
+        ).orElseThrow(() -> {
+                log.error(Constants.USER_NAME_EMPTY);
+                return new BadRequestException(Constants.USER_NAME_EMPTY);
+            }
+        );
 
         try {
             UserEntity savedUser = userRepository.saveAndFlush(user);
             return RegistrationDto.makeDefault(savedUser);
         } catch (PersistenceException e) {
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
     }
@@ -81,6 +93,10 @@ public class RegistrationController {
             @PathVariable(value = "token_user") String tokenUser,
             @RequestParam(value = "system_id") String systemId
     ){
+
+        log.debug("tokenUser: " + tokenUser);
+        log.debug("systemId: " + systemId);
+
         controllerHelper.getSystemOrThrowException(systemId);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
@@ -88,6 +104,7 @@ public class RegistrationController {
         try {
             userRepository.delete(user);
         } catch (PersistenceException e) {
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
 

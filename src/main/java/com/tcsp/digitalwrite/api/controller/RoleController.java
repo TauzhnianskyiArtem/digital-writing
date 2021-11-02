@@ -13,6 +13,7 @@ import com.tcsp.digitalwrite.store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @RestController
@@ -41,6 +43,8 @@ public class RoleController {
     public List<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
     ) {
+        log.debug("systemId: " + systemId);
+
         controllerHelper.getSystemOrThrowException(systemId);
 
         List<RoleEntity> roles = roleRepository.findAll();
@@ -55,6 +59,9 @@ public class RoleController {
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId
     ){
+        log.debug("optionalName: " + optionalName.get());
+        log.debug("systemId: " + systemId);
+
         controllerHelper.getSystemOrThrowException(systemId);
 
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
@@ -74,6 +81,7 @@ public class RoleController {
             roleRepository.save(role);
             return AnswerDto.makeDefault(Constants.CREATE_ROLE);
         } catch (PersistenceException e){
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
     }
@@ -84,6 +92,11 @@ public class RoleController {
             @RequestParam(value = "roles") List<String> roles,
             @RequestParam(value = "system_id") String systemId
     ){
+        log.debug("tokenUser: " + tokenUser);
+        log.debug("systemId: " + systemId);
+        log.debug("roles: " + roles);
+
+
         controllerHelper.getSystemOrThrowException(systemId);
 
         UserEntity user = controllerHelper.getUserOrThrowException(tokenUser);
@@ -98,6 +111,7 @@ public class RoleController {
             return RoleChangeDto.makeDefault(savedUser);
 
         } catch (PersistenceException e){
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
 
@@ -108,6 +122,9 @@ public class RoleController {
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "system_id") String systemId
     ){
+
+        log.debug("tokenUser: " + tokenUser);
+        log.debug("systemId: " + systemId);
 
         controllerHelper.getSystemOrThrowException(systemId);
 

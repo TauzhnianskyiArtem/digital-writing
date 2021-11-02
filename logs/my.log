@@ -1,0 +1,9 @@
+2021-11-02 21:08:55,963 INFO  [restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Starting DigitalWriteApplication using Java 1.8.0_291 on DESKTOP-35DET9F with PID 6316 (C:\Users\art12\IdeaProjects\Spring\digital-write\target\classes started by Артём in C:\Users\art12\IdeaProjects\Spring\digital-write)
+2021-11-02 21:08:55,994 DEBUG [restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Running with Spring Boot v2.5.5, Spring v5.3.10
+2021-11-02 21:08:55,994 INFO  [restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : No active profile set, falling back to default profiles: default
+2021-11-02 21:09:00,458 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Starting...
+2021-11-02 21:09:01,067 INFO  [restartedMain] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Start completed.
+2021-11-02 21:09:06,145 INFO  [restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Started DigitalWriteApplication in 11.823 seconds (JVM running for 15.295)
+2021-11-02 21:09:21,742 DEBUG [http-nio-9000-exec-1] com.tcsp.digitalwrite.api.controller.SystemController : Name: System 7
+2021-11-02 21:26:31,520 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown initiated...
+2021-11-02 21:26:31,535 INFO  [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown completed.

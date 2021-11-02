@@ -11,5 +11,16 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: update
+
+logging:
+  file:
+    name: logs/my.log
+  pattern:
+    file: "[%thread] %logger : %msg%n"
+  level:
+    org: ERROR
+    com.tcsp.digitalwrite: DEBUG
+
+
 server:
   port: 9000

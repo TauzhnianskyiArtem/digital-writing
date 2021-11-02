@@ -13,12 +13,14 @@ import com.tcsp.digitalwrite.store.repository.SessionRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
 import java.util.UUID;
 
+@Log4j2
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @RestController
@@ -40,6 +42,12 @@ public class AuthorizationController {
             @RequestParam(value = "system_id") String systemId
 
     ) {
+        log.debug("typingSpeed: " + typingSpeed);
+        log.debug("accuracy: " + accuracy);
+        log.debug("holdTime: " + holdTime);
+        log.debug("roleName: " + roleName);
+        log.debug("systemId: " + systemId);
+
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 
         RoleEntity role = controllerHelper.getRoleOrThrowException(roleName);
@@ -66,6 +74,7 @@ public class AuthorizationController {
             return AuthorizationDto.makeDefault(savedSession);
 
         } catch (PersistenceException e) {
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
 
@@ -83,6 +92,7 @@ public class AuthorizationController {
         try {
             sessionRepository.delete(session);
         } catch (PersistenceException e) {
+            log.error(Constants.ERROR_SERVICE);
             throw new SystemException(Constants.ERROR_SERVICE);
         }
 

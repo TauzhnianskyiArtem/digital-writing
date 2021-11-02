@@ -14,10 +14,12 @@ import com.tcsp.digitalwrite.store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.PersistenceException;
 
+@Log4j2
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Component
@@ -37,8 +39,10 @@ public class ControllerHelper {
         try {
             return systemRepository
                     .findById(systemId)
-                    .orElseThrow(() ->
-                            new NotFoundException(Constants.NOT_EXIST_SYSTEM)
+                    .orElseThrow(() -> {
+                            log.error(Constants.NOT_EXIST_SYSTEM);
+                            return new NotFoundException(Constants.NOT_EXIST_SYSTEM);
+                        }
                     );
         } catch (PersistenceException e){
             throw new SystemException(Constants.ERROR_SERVICE);
@@ -49,8 +53,10 @@ public class ControllerHelper {
         try {
             return roleRepository
                     .findByName(name)
-                    .orElseThrow(() ->
-                            new NotFoundException(Constants.NOT_EXIST_ROLE)
+                    .orElseThrow(() -> {
+                            log.error(Constants.NOT_EXIST_ROLE);
+                            return new NotFoundException(Constants.NOT_EXIST_ROLE);
+                        }
                     );
 
         } catch (PersistenceException e){
@@ -74,8 +80,10 @@ public class ControllerHelper {
         try {
             return sessionRepository
                     .findById(sessionId)
-                    .orElseThrow(() ->
-                            new NotFoundException(Constants.NOT_EXIST_SESSION)
+                    .orElseThrow(() -> {
+                            log.error(Constants.NOT_EXIST_SESSION);
+                            return new NotFoundException(Constants.NOT_EXIST_SESSION);
+                        }
                     );
         } catch (PersistenceException e){
             throw new SystemException(Constants.ERROR_SERVICE);
@@ -93,7 +101,10 @@ public class ControllerHelper {
                     typingSpeed,
                     accuracy,
                     holdTime,
-                    system).orElseThrow(() -> new NotFoundException(Constants.NOT_EXIST_USER));
+                    system).orElseThrow(() -> {
+                        log.error(Constants.NOT_EXIST_USER);
+                        return new NotFoundException(Constants.NOT_EXIST_USER);
+                    });
         } catch (PersistenceException e){
             throw new SystemException(Constants.ERROR_SERVICE);
         }
@@ -103,6 +114,10 @@ public class ControllerHelper {
         user.getRoles().stream()
                 .filter(r -> r.equals(role))
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException(Constants.NOT_USER_ROLE));
+                .orElseThrow(() -> {
+                        log.error(Constants.NOT_USER_ROLE);
+                        return new NotFoundException(Constants.NOT_USER_ROLE);
+                    }
+                );
     }
 }
