@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.yml")
 public class RoleControllerTests {
 
-    String nameRole = "Test role";
+    String nameRole = "TEST";
 
     String nameSystem = "System 1";
 
