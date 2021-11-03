@@ -55,7 +55,7 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
-    public AnswerDto createRole(
+    public AnswerDto addRole(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId
     ){
@@ -66,10 +66,15 @@ public class RoleController {
 
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
 
+
         if (optionalName.isPresent() && roleRepository.existsByName(optionalName.get())) {
             throw new BadRequestException(Constants.EXIST_ROLE);
         }
 
+        System.out.println();
+        if (optionalName.isPresent() && !optionalName.get().toUpperCase().equals(optionalName.get())){
+            throw new BadRequestException(Constants.ROLE_UPPER_CASE);
+        }
         RoleEntity role = optionalName
                 .map((name) ->
                         RoleEntity.builder()

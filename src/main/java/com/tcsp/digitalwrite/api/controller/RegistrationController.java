@@ -31,8 +31,8 @@ public class RegistrationController {
     ControllerHelper controllerHelper;
 
 
-    public static final String CREATE_USER = "/api/systems/registration/users";
-    public static final String DELETE_USER = "/api/systems/registration/users/{token_user}";
+    public static final String CREATE_USER = "/api/registration";
+    public static final String DELETE_USER = "/api/registration/{token_user}";
 
     @PostMapping(CREATE_USER)
     public RegistrationDto registerUser(

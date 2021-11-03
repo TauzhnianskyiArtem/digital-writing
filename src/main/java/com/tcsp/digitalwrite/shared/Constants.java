@@ -20,6 +20,7 @@ public interface Constants {
 
     String CHANGE_ROLES = "Roles changed";
 
+    String ROLE_UPPER_CASE = "Roles must be in uppercase";
     String EXIST_ROLE = "Role with such name already exists";
 
     String NOT_EXIST_ROLE = "Role doesn't exist";
