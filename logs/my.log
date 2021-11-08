@@ -909,3 +909,11 @@ com.tcsp.digitalwrite.api.exception.NotFoundException: System doesn't exist
 [http-nio-9000-exec-7] com.tcsp.digitalwrite.api.controller.RoleController : systemId: 98f28dbb-d857-4819-9ebb-3c2f78a11c24
 [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown initiated...
 [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown completed.
+[restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Starting DigitalWriteApplication using Java 1.8.0_291 on DESKTOP-35DET9F with PID 6372 (C:\Users\art12\IdeaProjects\Spring\digital-write\target\classes started by Артём in C:\Users\art12\IdeaProjects\Spring\digital-write)
+[restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Running with Spring Boot v2.5.5, Spring v5.3.10
+[restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : No active profile set, falling back to default profiles: default
+[restartedMain] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Starting...
+[restartedMain] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Start completed.
+[restartedMain] com.tcsp.digitalwrite.DigitalWriteApplication : Started DigitalWriteApplication in 21.9 seconds (JVM running for 29.244)
+[SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown initiated...
+[SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource : HikariPool-1 - Shutdown completed.
