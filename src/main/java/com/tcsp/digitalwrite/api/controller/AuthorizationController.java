@@ -3,6 +3,7 @@ package com.tcsp.digitalwrite.api.controller;
 import com.tcsp.digitalwrite.api.controller.helper.ControllerHelper;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
 import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
+import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.SystemException;
 import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.RoleEntity;
@@ -47,6 +48,15 @@ public class AuthorizationController {
         log.debug("holdTime: " + holdTime);
         log.debug("roleName: " + roleName);
         log.debug("systemId: " + systemId);
+
+        if (typingSpeed <= 0)
+            throw new BadRequestException(Constants.NEGATIVE_TYPING_SPEED);
+
+        if (accuracy <= 0 || accuracy > 100)
+            throw new BadRequestException(Constants.WRONG_ACCURACY);
+
+        if (holdTime <= 0)
+            throw new BadRequestException(Constants.NEGATIVE_HOLD_TIME);
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 

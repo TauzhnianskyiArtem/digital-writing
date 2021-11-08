@@ -52,7 +52,7 @@ public class SystemControllerTests {
 
     }
 
-    @Test
+    @Test()
     public void deleteSystem() throws Exception {
 
         SystemEntity system = systemRepository.findByName(this.nameSystem).get();

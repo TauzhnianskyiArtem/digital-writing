@@ -39,5 +39,11 @@ public interface Constants {
 
     String ERROR_SERVICE = "Error in the service";
 
+    String NEGATIVE_TYPING_SPEED = "Typing speed should not be negative";
+
+    String WRONG_ACCURACY = "Accuracy should be from 0 to 100";
+
+    String NEGATIVE_HOLD_TIME = "Hold time should not be negative";
+
     int EXPIRED_SECONDS = 60 * 60;
 }

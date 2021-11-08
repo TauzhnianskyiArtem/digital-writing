@@ -50,6 +50,14 @@ public class RegistrationController {
         log.debug("systemId: " + systemId);
         log.debug("roles: " + userRoles);
 
+        if (typingSpeed <= 0)
+            throw new BadRequestException(Constants.NEGATIVE_TYPING_SPEED);
+
+        if (accuracy <= 0 || accuracy > 100)
+            throw new BadRequestException(Constants.WRONG_ACCURACY);
+
+        if (holdTime <= 0)
+            throw new BadRequestException(Constants.NEGATIVE_HOLD_TIME);
 
         optionalName = optionalName.filter( name -> !name.trim().isEmpty());
 

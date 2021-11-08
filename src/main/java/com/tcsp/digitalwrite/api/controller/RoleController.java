@@ -14,7 +14,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -41,7 +44,7 @@ public class RoleController {
 
 
     @GetMapping(FETCH_ROLES)
-    @Cacheable(value = "roleItem")
+    @Cacheable(value = "roleCache")
     public List<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
     ) {
@@ -57,6 +60,7 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
+    @CacheEvict(value = "roleCache", allEntries = true)
     public AnswerDto addRole(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId
@@ -69,14 +73,13 @@ public class RoleController {
         optionalName = optionalName.filter(name -> !name.trim().isEmpty());
 
 
-        if (optionalName.isPresent() && roleRepository.existsByName(optionalName.get())) {
+        if (optionalName.isPresent() && roleRepository.existsByName(optionalName.get()))
             throw new BadRequestException(Constants.EXIST_ROLE);
-        }
 
-        System.out.println();
-        if (optionalName.isPresent() && !optionalName.get().toUpperCase().equals(optionalName.get())){
+        if (optionalName.isPresent() && !optionalName.get().toUpperCase().equals(optionalName.get()))
             throw new BadRequestException(Constants.ROLE_UPPER_CASE);
-        }
+
+
         RoleEntity role = optionalName
                 .map((name) ->
                         RoleEntity.builder()

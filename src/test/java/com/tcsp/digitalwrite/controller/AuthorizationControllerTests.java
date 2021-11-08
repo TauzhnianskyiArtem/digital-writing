@@ -89,6 +89,5 @@ public class AuthorizationControllerTests {
         mockMvc.perform(delete(AuthorizationController.DELETE_SESSION.replace("{session_id}", session.getId()))
                         .param("system_id", user.getSystem().getId()))
                 .andExpect(status().isOk());
-
     }
 }
