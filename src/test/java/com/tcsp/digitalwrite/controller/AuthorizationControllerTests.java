@@ -40,9 +40,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AuthorizationControllerTests {
 
     @Autowired
-    ObjectMapper objectMapper;
-
-    @Autowired
     SystemRepository systemRepository;
 
     @Autowired
@@ -76,11 +73,9 @@ public class AuthorizationControllerTests {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        AuthorizationDto system = objectMapper
-                .readValue(result.getResponse().getContentAsString(), AuthorizationDto.class);
     }
 
-    @Test
+    @Test()
     public void deleteSession() throws Exception {
 
         UserEntity user = userRepository.findByName(this.nameUser);
