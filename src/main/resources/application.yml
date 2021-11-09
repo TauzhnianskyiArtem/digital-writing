@@ -4,28 +4,15 @@ spring:
   redis:
     host: localhost
     port: 6379
-  h2:
-    console.enabled: true
   datasource:
-    url: jdbc:h2:file:./data/testDB
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:5432/digital-write
+    username: postgres
+    password: 121art121
   jpa:
-    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
     generate-ddl: true
-    hibernate:
-      ddl-auto: update
-
-logging:
-  file:
-    name: logs/my.log
-  pattern:
-    file: "[%thread] %logger : %msg%n"
-  level:
-    org: ERROR
-    com.tcsp.digitalwrite: DEBUG
-
+    open-in-view: false
+    show-sql: true
+    properties.hibernate.format_sql: true
 
 server:
   port: 9000

@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "usr")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     Long id;
 
     String token;

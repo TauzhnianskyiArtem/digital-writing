@@ -21,6 +21,7 @@ public class SystemEntity {
     @Id
     String id;
 
+    @Column(unique = true)
     String name;
 
     @Builder.Default

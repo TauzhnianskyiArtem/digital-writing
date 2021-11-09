@@ -18,6 +18,7 @@ public class RoleEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @Column(unique = true)
     String name;
 
 }
