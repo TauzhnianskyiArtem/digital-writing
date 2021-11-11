@@ -1,11 +1,9 @@
 package com.tcsp.digitalwrite.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcsp.digitalwrite.api.controller.AuthorizationController;
-import com.tcsp.digitalwrite.api.controller.RegistrationController;
-import com.tcsp.digitalwrite.api.controller.SystemController;
-import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
-import com.tcsp.digitalwrite.api.dto.SystemDto;
+import com.tcsp.digitalwrite.api.exception.BadRequestException;
+import com.tcsp.digitalwrite.api.exception.NotFoundException;
+import com.tcsp.digitalwrite.shared.Constants;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
 import com.tcsp.digitalwrite.store.repository.SessionRepository;
@@ -17,18 +15,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.MultiValueMapAdapter;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,9 +45,9 @@ public class AuthorizationControllerTests {
     //    Test User
     String nameUser = "User 1";
     String nameSystem = "System 1";
-    Double typingSpeed = 80d;
-    Double accuracy = 0.5d;
-    Double holdTime = 0.4d;
+    Double typingSpeed = 0.5d;
+    Double accuracy = 15d;
+    Double holdTime = 0.5d;
     String roleName = "USER";
 
     @Test
@@ -85,4 +76,140 @@ public class AuthorizationControllerTests {
                         .param("system_id", user.getSystem().getId()))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    public void nagativeTypingSpeed() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", "-10")
+                        .param("accuracy", this.accuracy.toString())
+                        .param("hold_time", this.holdTime.toString())
+                        .param("role", this.roleName))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
+                .andExpect(result -> assertEquals(Constants.NEGATIVE_TYPING_SPEED, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void nagativeAccuracy() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", this.typingSpeed.toString())
+                        .param("accuracy", "-10")
+                        .param("hold_time", this.holdTime.toString())
+                        .param("role", this.roleName))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
+                .andExpect(result -> assertEquals(Constants.WRONG_ACCURACY, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void nagativeHoldTime() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", this.typingSpeed.toString())
+                        .param("accuracy", this.accuracy.toString())
+                        .param("hold_time", "-1")
+                        .param("role", this.roleName))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
+                .andExpect(result -> assertEquals(Constants.NEGATIVE_HOLD_TIME, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void wrongSystemId() throws Exception {
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", "wrong")
+                        .param("typing_speed", this.typingSpeed.toString())
+                        .param("accuracy", this.accuracy.toString())
+                        .param("hold_time", this.holdTime.toString())
+                        .param("role", this.roleName))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void wrongRole() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", this.typingSpeed.toString())
+                        .param("accuracy", this.accuracy.toString())
+                        .param("hold_time", this.holdTime.toString())
+                        .param("role", "WRONG"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void notHaveUserRole() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", this.typingSpeed.toString())
+                        .param("accuracy", this.accuracy.toString())
+                        .param("hold_time", this.holdTime.toString())
+                        .param("role", "ADMIN"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_USER_ROLE, result.getResolvedException().getMessage()));
+    }
+
+    @Test
+    public void wrongUser() throws Exception {
+
+        String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+
+        mockMvc.perform(post(AuthorizationController.CREATE_SESSION)
+                        .param("system_id", systemdId)
+                        .param("typing_speed", "1")
+                        .param("accuracy", "1")
+                        .param("hold_time", "1")
+                        .param("role", "ADMIN"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER, result.getResolvedException().getMessage()));
+    }
+
+    @Test()
+    public void wrongSessionId() throws Exception {
+
+        UserEntity user = userRepository.findByName(this.nameUser);
+        String sessionId = "wrong";
+
+        mockMvc.perform(delete(AuthorizationController.DELETE_SESSION.replace("{session_id}", sessionId))
+                        .param("system_id", user.getSystem().getId()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SESSION, result.getResolvedException().getMessage()));
+    }
+
+    @Test()
+    public void wrongSystemIdDeleteSession() throws Exception {
+
+        UserEntity user = userRepository.findByName(this.nameUser);
+        SessionEntity session = sessionRepository.findByUser(user);
+
+        mockMvc.perform(delete(AuthorizationController.DELETE_SESSION.replace("{session_id}", session.getId()))
+                        .param("system_id", "wrong"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));
+    }
+
 }
