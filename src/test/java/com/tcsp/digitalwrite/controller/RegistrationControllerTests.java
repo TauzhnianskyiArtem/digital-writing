@@ -35,11 +35,11 @@ public class RegistrationControllerTests {
     MockMvc mockMvc;
 
     //    Test User
-    String nameSystem = "System 3";
+    String nameSystem = "System 1";
     String name = "Test User";
-    Double typingSpeed = 100d;
+    Double typingSpeed = 230d;
     Double accuracy = 90d;
-    Double holdTime = 0.5d;
+    Double holdTime = 1d;
 
     @Test
     public void registerUser() throws Exception {

@@ -44,10 +44,10 @@ public class AuthorizationControllerTests {
 
     //    Test User
     String nameUser = "User 1";
-    String nameSystem = "System 3";
-    Double typingSpeed = 30d;
-    Double accuracy = 100d;
-    Double holdTime = 0.6d;
+    String nameSystem = "System 1";
+    Double typingSpeed = 100d;
+    Double accuracy = 90d;
+    Double holdTime = 0.5d;
     String roleName = "USER";
 
     @Test
