@@ -35,9 +35,9 @@ public class RegistrationControllerTests {
     MockMvc mockMvc;
 
     //    Test User
-    String nameSystem = "System 1";
+    String nameSystem = "System 3";
     String name = "Test User";
-    Double typingSpeed = 20d;
+    Double typingSpeed = 100d;
     Double accuracy = 90d;
     Double holdTime = 0.5d;
 
@@ -166,5 +166,30 @@ public class RegistrationControllerTests {
                 .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE, result.getResolvedException().getMessage()));
     }
 
+    @Test
+    public void wrongSystemIdDeleteUser() throws Exception {
+        String nameUser = "User 1";
+        UserEntity user = userRepository.findByName(nameUser);
+
+        mockMvc.perform(delete(RegistrationController.DELETE_USER.replace("{token_user}", user.getToken()))
+                        .param("system_id", "wrong"))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));;
+
+    }
+
+    @Test
+    public void wrongTokenUserDeleteUser() throws Exception {
+        String nameUser = "User 1";
+        UserEntity user = userRepository.findByName(nameUser);
+
+        mockMvc.perform(delete(RegistrationController.DELETE_USER.replace("{token_user}", "wrong"))
+                        .param("system_id", user.getSystem().getId()))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER, result.getResolvedException().getMessage()));;
+
+    }
 
 }
