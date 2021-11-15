@@ -18,8 +18,12 @@ import java.util.Set;
 @Entity
 @Table(name = "usr")
 public class UserEntity {
+
+    final String SEQUENCE_NAME = "usr_seq";
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = SEQUENCE_NAME)
+    @SequenceGenerator(name = SEQUENCE_NAME, sequenceName = SEQUENCE_NAME, allocationSize = 1)
     Long id;
 
     String token;
