@@ -1,6 +1,9 @@
 package com.tcsp.digitalwrite.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcsp.digitalwrite.api.controller.RegistrationController;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
+import com.tcsp.digitalwrite.api.dto.RegistrationDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.NotFoundException;
 import com.tcsp.digitalwrite.shared.Constants;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +36,9 @@ public class RegistrationControllerTests {
     UserRepository userRepository;
 
     @Autowired
+    ObjectMapper objectMapper;
+
+    @Autowired
     MockMvc mockMvc;
 
     //    Test User
@@ -46,24 +53,30 @@ public class RegistrationControllerTests {
 
         String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
 
-        mockMvc.perform(post(RegistrationController.CREATE_USER)
+        MvcResult result = mockMvc.perform(post(RegistrationController.CREATE_USER)
                         .param("name", this.name)
                         .param("system_id", systemdId)
                         .param("typing_speed", this.typingSpeed.toString())
                         .param("accuracy", this.accuracy.toString())
                         .param("hold_time", this.holdTime.toString())
                         .param("user_roles", "USER"))
-                .andExpect(status().isOk());
-
+                .andExpect(status().isOk())
+                .andReturn();
+        RegistrationDto dto = objectMapper.readValue(result.getResponse().getContentAsString(), RegistrationDto .class);
+        assert(dto.getData().equals(Constants.SUCCESS_REGISTERED));
     }
 
     @Test
     public void deleteUser() throws Exception {
         UserEntity user = userRepository.findByName(this.name);
 
-        mockMvc.perform(delete(RegistrationController.DELETE_USER.replace("{token_user}", user.getToken()))
+        MvcResult result = mockMvc.perform(delete(
+                RegistrationController.DELETE_USER.replace("{token_user}", user.getToken()))
                         .param("system_id", user.getSystem().getId()))
-                        .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        AnswerDto dto = objectMapper.readValue(result.getResponse().getContentAsString(), AnswerDto.class);
+        assert(dto.getData().equals(Constants.DELETE_USER));
 
     }
 
@@ -81,7 +94,8 @@ public class RegistrationControllerTests {
                         .param("user_roles", "USER"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.USER_NAME_EMPTY, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.USER_NAME_EMPTY,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -98,7 +112,8 @@ public class RegistrationControllerTests {
                         .param("user_roles", "USER"))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.NEGATIVE_TYPING_SPEED, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.NEGATIVE_TYPING_SPEED,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -146,7 +161,8 @@ public class RegistrationControllerTests {
                         .param("user_roles", "USER"))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -163,7 +179,8 @@ public class RegistrationControllerTests {
                         .param("user_roles", "USER","WRONG"))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -175,7 +192,8 @@ public class RegistrationControllerTests {
                         .param("system_id", "wrong"))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));;
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM,
+                        result.getResolvedException().getMessage()));;
 
     }
 
@@ -188,7 +206,8 @@ public class RegistrationControllerTests {
                         .param("system_id", user.getSystem().getId()))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER, result.getResolvedException().getMessage()));;
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER,
+                        result.getResolvedException().getMessage()));
 
     }
 

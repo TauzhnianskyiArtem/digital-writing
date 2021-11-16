@@ -1,6 +1,10 @@
 package com.tcsp.digitalwrite.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcsp.digitalwrite.api.controller.RoleController;
+import com.tcsp.digitalwrite.api.dto.AnswerDto;
+import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
+import com.tcsp.digitalwrite.api.dto.RoleChangeDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.NotFoundException;
 import com.tcsp.digitalwrite.shared.Constants;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
 
@@ -30,6 +35,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RoleControllerTests {
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     String nameRole = "TEST";
 
@@ -50,15 +58,32 @@ public class RoleControllerTests {
     MockMvc mockMvc;
 
     @Test
-    @Transactional
     public void addRole() throws Exception {
         String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
+        MvcResult result = mockMvc.perform(post(RoleController.CREATE_ROLES)
+                        .param("name", this.nameRole)
+                        .param("system_id", systemdId))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        AnswerDto dto = objectMapper.readValue(result.getResponse().getContentAsString(), AnswerDto.class);
+        assert(dto.getData().equals(Constants.CREATE_ROLE));
+
+        roleRepository.deleteByName(this.nameRole);
+    }
+
+    @Test
+    public void wrongSystemId() throws Exception {
+
+        String systemdId = "wrong";
+
         mockMvc.perform(post(RoleController.CREATE_ROLES)
                         .param("name", this.nameRole)
                         .param("system_id", systemdId))
-                .andExpect(status().isOk());
-
-        roleRepository.deleteByName(this.nameRole);
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM,
+                        result.getResolvedException().getMessage()));;
     }
 
     @Test
@@ -70,7 +95,8 @@ public class RoleControllerTests {
                         .param("system_id", systemdId))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.ROLE_EMPTY, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.ROLE_EMPTY,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -82,7 +108,8 @@ public class RoleControllerTests {
                         .param("system_id", systemdId))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.ROLE_UPPER_CASE, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.ROLE_UPPER_CASE,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -94,7 +121,8 @@ public class RoleControllerTests {
                         .param("system_id", systemdId))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.EXIST_ROLE, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.EXIST_ROLE,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
@@ -106,11 +134,15 @@ public class RoleControllerTests {
 
         String role = "USER";
 
-        mockMvc.perform(put(RoleController.CHANGE_ROLES_USER)
+        MvcResult result = mockMvc.perform(put(RoleController.CHANGE_ROLES_USER)
                         .param("system_id", systemdId)
                         .param("token_user", tokenUser)
                         .param("roles", role))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
+        RoleChangeDto dto = objectMapper.readValue(
+                result.getResponse().getContentAsString(),  RoleChangeDto.class);
+        assert(dto.getData().equals(Constants.CHANGE_ROLES));
     }
 
     @Test
@@ -128,7 +160,8 @@ public class RoleControllerTests {
                         .param("roles", role))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM, result.getResolvedException().getMessage()));;
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_SYSTEM,
+                        result.getResolvedException().getMessage()));;
     }
 
     @Test
@@ -146,7 +179,8 @@ public class RoleControllerTests {
                         .param("roles", role))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER, result.getResolvedException().getMessage()));;
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_USER,
+                        result.getResolvedException().getMessage()));;
     }
 
     @Test
@@ -164,7 +198,8 @@ public class RoleControllerTests {
                         .param("roles", role))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
-                .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE, result.getResolvedException().getMessage()));;
+                .andExpect(result -> assertEquals(Constants.NOT_EXIST_ROLE,
+                        result.getResolvedException().getMessage()));;
     }
 
 }

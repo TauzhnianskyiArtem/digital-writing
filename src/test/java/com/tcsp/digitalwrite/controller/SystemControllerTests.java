@@ -68,7 +68,8 @@ public class SystemControllerTests {
                         .param("name", ""))
                 .andExpect(status().isBadRequest())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BadRequestException))
-                .andExpect(result -> assertEquals(Constants.SYSTEM_NAME_EMPTY, result.getResolvedException().getMessage()));
+                .andExpect(result -> assertEquals(Constants.SYSTEM_NAME_EMPTY,
+                        result.getResolvedException().getMessage()));
     }
 
     @Test
