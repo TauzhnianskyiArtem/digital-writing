@@ -3,7 +3,6 @@ package com.tcsp.digitalwrite.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcsp.digitalwrite.api.controller.RoleController;
 import com.tcsp.digitalwrite.api.dto.AnswerDto;
-import com.tcsp.digitalwrite.api.dto.AuthorizationDto;
 import com.tcsp.digitalwrite.api.dto.RoleChangeDto;
 import com.tcsp.digitalwrite.api.exception.BadRequestException;
 import com.tcsp.digitalwrite.api.exception.NotFoundException;
@@ -21,9 +20,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import javax.transaction.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -57,6 +53,7 @@ public class RoleControllerTests {
     @Autowired
     MockMvc mockMvc;
 
+    @Transactional
     @Test
     public void addRole() throws Exception {
         String systemdId = systemRepository.findByName(this.nameSystem).get().getId();
