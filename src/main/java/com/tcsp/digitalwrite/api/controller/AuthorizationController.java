@@ -15,10 +15,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Log4j2
@@ -70,6 +70,12 @@ public class AuthorizationController {
                 system);
 
         controllerHelper.checkUserRoleOrThrowException(user, role);
+
+
+        Optional<SessionEntity> sessionFromDb = sessionRepository.findByUserAndRole(user, role);
+
+        if(!sessionFromDb.isPresent())
+            throw new BadRequestException(Constants.EXIST_SESSION);
 
         String id = UUID.randomUUID().toString();
 

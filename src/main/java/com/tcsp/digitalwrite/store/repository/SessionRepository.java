@@ -1,5 +1,6 @@
 package com.tcsp.digitalwrite.store.repository;
 
+import com.tcsp.digitalwrite.store.entity.RoleEntity;
 import com.tcsp.digitalwrite.store.entity.SessionEntity;
 import com.tcsp.digitalwrite.store.entity.SystemEntity;
 import com.tcsp.digitalwrite.store.entity.UserEntity;
@@ -13,4 +14,6 @@ public interface SessionRepository extends JpaRepository<SessionEntity, String> 
     SessionEntity findByUser(UserEntity user);
 
     void deleteAllByExpiredAtBefore(Instant expiredAt);
+
+    Optional<SessionEntity> findByUserAndRole(UserEntity user, RoleEntity role);
 }
