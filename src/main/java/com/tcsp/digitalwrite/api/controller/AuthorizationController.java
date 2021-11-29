@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -35,6 +36,7 @@ public class AuthorizationController {
     public static final String DELETE_SESSION = "/api/users/auth/{session_id}";
 
     @PostMapping(CREATE_SESSION)
+    @Transactional
     public AuthorizationDto authorizeUser(
             @RequestParam(value = "typing_speed") Double typingSpeed,
             @RequestParam Double accuracy,
@@ -97,6 +99,7 @@ public class AuthorizationController {
     }
 
     @DeleteMapping(DELETE_SESSION)
+    @Transactional
     public AnswerDto logOutUser(
             @PathVariable("session_id") String sessionId,
             @RequestParam(value = "system_id") String systemId

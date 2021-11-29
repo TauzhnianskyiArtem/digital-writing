@@ -14,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -35,6 +36,7 @@ public class RegistrationController {
     public static final String DELETE_USER = "/api/registration/{token_user}";
 
     @PostMapping(CREATE_USER)
+    @Transactional
     public RegistrationDto registerUser(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "typing_speed") Double typingSpeed,
@@ -101,6 +103,7 @@ public class RegistrationController {
     }
 
     @DeleteMapping(DELETE_USER)
+    @Transactional
     public AnswerDto deleteUser(
             @PathVariable(value = "token_user") String tokenUser,
             @RequestParam(value = "system_id") String systemId

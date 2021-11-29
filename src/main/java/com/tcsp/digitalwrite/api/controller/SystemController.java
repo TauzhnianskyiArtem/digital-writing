@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -32,6 +33,7 @@ public class SystemController {
     public static final String DELETE_SYSTEM = "/api/systems/{system_id}";
 
     @PostMapping(CREATE_SYSTEM)
+    @Transactional
     public SystemDto createSystem(
             @RequestParam(value = "name") Optional<String> optionalName
     ){
@@ -62,6 +64,7 @@ public class SystemController {
     }
 
     @DeleteMapping(DELETE_SYSTEM)
+    @Transactional
     public AnswerDto deleteSystem(@PathVariable("system_id") String systemId) {
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);

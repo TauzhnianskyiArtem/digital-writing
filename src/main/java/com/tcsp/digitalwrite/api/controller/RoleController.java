@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
@@ -44,7 +45,8 @@ public class RoleController {
 
 
     @GetMapping(FETCH_ROLES)
-//    @Cacheable(value = "roleCache")
+    @Transactional
+    @Cacheable(value = "roleCache")
     public List<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
     ) {
@@ -60,7 +62,8 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
-//    @CacheEvict(value = "roleCache", allEntries = true)
+    @Transactional
+    @CacheEvict(value = "roleCache", allEntries = true)
     public AnswerDto addRole(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId
@@ -97,6 +100,7 @@ public class RoleController {
     }
 
     @PutMapping(CHANGE_ROLES_USER)
+    @Transactional
     public RoleChangeDto changeRoles(
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "roles") List<String> roles,
@@ -128,6 +132,7 @@ public class RoleController {
     }
 
     @GetMapping(FETCH_ROLES_USER)
+    @Transactional
     public List<String> fetchRolesByUser(
             @RequestParam(value = "token_user") String tokenUser,
             @RequestParam(value = "system_id") String systemId
