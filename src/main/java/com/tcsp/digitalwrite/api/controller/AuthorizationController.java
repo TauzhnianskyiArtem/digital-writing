@@ -74,7 +74,7 @@ public class AuthorizationController {
 
         Optional<SessionEntity> sessionFromDb = sessionRepository.findByUserAndRole(user, role);
 
-        if(!sessionFromDb.isPresent())
+        if(sessionFromDb.isPresent())
             throw new BadRequestException(Constants.EXIST_SESSION);
 
         String id = UUID.randomUUID().toString();

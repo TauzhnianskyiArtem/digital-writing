@@ -180,7 +180,7 @@ public class AuthorizationControllerTests {
                         .param("typing_speed", this.typingSpeed.toString())
                         .param("accuracy", this.accuracy.toString())
                         .param("hold_time", this.holdTime.toString())
-                        .param("role", "ADMIN"))
+                        .param("role", "MODERATOR"))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NotFoundException))
                 .andExpect(result -> assertEquals(Constants.NOT_USER_ROLE, result.getResolvedException().getMessage()));
