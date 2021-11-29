@@ -44,7 +44,7 @@ public class RoleController {
 
 
     @GetMapping(FETCH_ROLES)
-    @Cacheable(value = "roleCache")
+//    @Cacheable(value = "roleCache")
     public List<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
     ) {
@@ -60,7 +60,7 @@ public class RoleController {
     }
 
     @PostMapping(CREATE_ROLES)
-    @CacheEvict(value = "roleCache", allEntries = true)
+//    @CacheEvict(value = "roleCache", allEntries = true)
     public AnswerDto addRole(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId

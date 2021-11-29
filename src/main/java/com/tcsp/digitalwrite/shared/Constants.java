@@ -14,6 +14,8 @@ public interface Constants {
 
     String NOT_EXIST_USER = "User doesn't exist";
 
+    String EXIST_USER = "User already exists";
+
     String EXIST_SESSION ="User is already signed in with this role";
 
     String ROLE_EMPTY = "Role name can't be empty";

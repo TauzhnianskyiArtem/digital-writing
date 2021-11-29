@@ -14,4 +14,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     Optional<UserEntity> findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(
             Double typingSpeed, Double accuracy, Double holdTime, SystemEntity system);
+
 }

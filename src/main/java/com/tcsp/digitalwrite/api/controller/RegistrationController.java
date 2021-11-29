@@ -63,6 +63,10 @@ public class RegistrationController {
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 
+        Optional<UserEntity> userFromDb = userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(typingSpeed, accuracy, holdTime, system);
+
+        if(userFromDb.isPresent())
+            throw new BadRequestException(Constants.EXIST_USER);
 
 
         Set<RoleEntity> roles = userRoles.stream()
