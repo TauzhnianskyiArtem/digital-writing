@@ -13,17 +13,14 @@ import com.tcsp.digitalwrite.store.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.PersistenceException;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -31,6 +28,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestController
 public class RoleController {
+
+    @NonFinal Map<Long, String> rolesCache;
+
 
     RoleRepository roleRepository;
 
@@ -43,27 +43,31 @@ public class RoleController {
     public static final String CHANGE_ROLES_USER = "/api/users/roles/change";
     public static final String FETCH_ROLES_USER = "/api/users/roles";
 
+    @PostConstruct
+    public void init(){
+        this.rolesCache = new HashMap<>();
+    }
+
 
     @GetMapping(FETCH_ROLES)
     @Transactional
-    @Cacheable(value = "roleCache")
-    public List<String> fetchRoles(
+    public Collection<String> fetchRoles(
             @RequestParam(value = "system_id") String systemId
     ) {
         log.debug("systemId: " + systemId);
 
         controllerHelper.getSystemOrThrowException(systemId);
 
-        List<RoleEntity> roles = roleRepository.findAll();
+        if (rolesCache.isEmpty()){
+            List<RoleEntity> roles = roleRepository.findAll();
+            this.rolesCache = roles.stream().collect(Collectors.toMap(RoleEntity::getId, RoleEntity::getName));
+        }
 
-        List<String> result = roles.stream().map(role -> role.getName()).collect(Collectors.toList());
-
-        return result;
+        return rolesCache.values();
     }
 
     @PostMapping(CREATE_ROLES)
     @Transactional
-    @CacheEvict(value = "roleCache", allEntries = true)
     public AnswerDto addRole(
             @RequestParam(value = "name") Optional<String> optionalName,
             @RequestParam(value = "system_id") String systemId
@@ -91,7 +95,11 @@ public class RoleController {
                 .orElseThrow(() ->  new BadRequestException(Constants.ROLE_EMPTY));
 
         try {
+
             roleRepository.save(role);
+            this.rolesCache.put(role.getId(),role.getName());
+
+
             return AnswerDto.makeDefault(Constants.CREATE_ROLE);
         } catch (PersistenceException e){
             log.error(Constants.ERROR_SERVICE);
