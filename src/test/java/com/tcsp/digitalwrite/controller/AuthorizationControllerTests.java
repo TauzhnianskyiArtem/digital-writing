@@ -51,9 +51,9 @@ public class AuthorizationControllerTests {
     //    Test User
     String nameUser = "User 1";
     String nameSystem = "System 1";
-    Double typingSpeed = 100d;
-    Double accuracy = 90d;
-    Double holdTime = 0.5d;
+    Double typingSpeed = 50d;
+    Double accuracy = 100d;
+    Double holdTime = 0.8d;
     String roleName = "USER";
 
     @Test

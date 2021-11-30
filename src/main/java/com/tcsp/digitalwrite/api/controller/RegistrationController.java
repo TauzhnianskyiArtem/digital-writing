@@ -65,11 +65,6 @@ public class RegistrationController {
 
         SystemEntity system = controllerHelper.getSystemOrThrowException(systemId);
 
-        Optional<UserEntity> userFromDb = userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(typingSpeed, accuracy, holdTime, system);
-
-        if(userFromDb.isPresent())
-            throw new BadRequestException(Constants.EXIST_USER);
-
 
         Set<RoleEntity> roles = userRoles.stream()
                 .map(role -> controllerHelper.getRoleOrThrowException(role))
@@ -92,6 +87,10 @@ public class RegistrationController {
                 return new BadRequestException(Constants.USER_NAME_EMPTY);
             }
         );
+
+        Optional<UserEntity> userFromDb = userRepository.findByTypingSpeedAndAccuracyAndHoldTimeAndSystem(typingSpeed, accuracy, holdTime, system);
+        if(userFromDb.isPresent())
+            throw new BadRequestException(Constants.EXIST_USER);
 
         try {
             UserEntity savedUser = userRepository.saveAndFlush(user);

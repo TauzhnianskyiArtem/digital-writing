@@ -1,13 +1,8 @@
 spring:
-  cache:
-    type: redis
-  redis:
-    host: localhost
-    port: 6379
   datasource:
-    url: jdbc:postgresql://localhost:5432/digital-write
+    url: jdbc:postgresql://20.42.60.224:5432/digital-write
     username: postgres
-    password: 121art121
+    password: oykmxkagbpxkqmjp
   jpa:
     generate-ddl: true
     open-in-view: false
