@@ -99,8 +99,6 @@ public class AuthorizationController {
     }
 
 
-
-
     @DeleteMapping(DELETE_SESSION)
     @Transactional
     public AnswerDto logOutUser(
@@ -121,7 +119,5 @@ public class AuthorizationController {
         return AnswerDto.makeDefault(Constants.DELETE_SESSION);
 
     }
-
-
 
 }
