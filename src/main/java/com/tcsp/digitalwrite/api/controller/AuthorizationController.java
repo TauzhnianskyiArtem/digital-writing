@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.PersistenceException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
